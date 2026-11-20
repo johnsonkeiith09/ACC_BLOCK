@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AAC Block Manufacturing Enterprise ERP - Autopilot Engine</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#fffbeb',
+              100: '#fef3c7',
+              500: '#f59e0b',
+              600: '#d97706',
+              700: '#b45309',
+            },
+            slate: {
+              850: '#131c2e',
+              900: '#0f172a',
+              950: '#080d1a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #475569;
+    }
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printable-invoice, #printable-invoice * {
+        visibility: visible;
+      }
+      #printable-invoice {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        color: #000 !important;
+        background: #fff !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col selection:bg-amber-500 selection:text-slate-950">
+
+  <!-- Header Bar -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-40 px-4 lg:px-8 py-3 flex items-center justify-between">
+    <div class="flex items-center space-x-4">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-600 to-amber-400 flex items-center justify-center text-slate-950 font-extrabold text-xl shadow-lg shadow-amber-500/20">
+        <i data-lucide="factory" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <div class="flex items-center space-x-2">
+          <h1 class="text-lg font-bold text-slate-100 leading-none">SHREE SHAKTI AAC INDUSTRIES</h1>
+          <span class="px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-full flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span> AUTOPILOT LIVE
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 mt-1">Enterprise Portal • Mr. Nipun Chaturbhai Sukhadiya</p>
+      </div>
+    </div>
+
+    <!-- Quick Autopilot Status Indicators -->
+    <div class="hidden md:flex items-center space-x-6 text-xs">
+      <div class="flex items-center space-x-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50">
+        <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+        <div>
+          <p class="text-slate-400 text-[10px]">GST AUTO-MATCH</p>
+          <p class="font-mono font-semibold text-emerald-400">99.4% ITC Verified</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50">
+        <i data-lucide="cpu" class="w-4 h-4 text-amber-400"></i>
+        <div>
+          <p class="text-slate-400 text-[10px]">AUTOCLAVE CYCLES</p>
+          <p class="font-mono font-semibold text-amber-300">3 Batches Active</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2 bg-slate-800/60 px-3 py-1.5 rounded-lg border border-slate-700/50">
+        <i data-lucide="bell-ring" class="w-4 h-4 text-sky-400"></i>
+        <div>
+          <p class="text-slate-400 text-[10px]">AUTOPILOT ACTIONS</p>
+          <p class="font-mono font-semibold text-sky-300" id="autopilot-count-badge">14 Handled Today</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- User Profile & Actions -->
+    <div class="flex items-center space-x-3">
+      <button onclick="triggerGlobalAutopilotSync()" class="px-3 py-1.5 text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-lg transition-all flex items-center gap-1.5">
+        <i data-lucide="refresh-cw" class="w-3.5 h-3.5 animate-spin-slow"></i> Force Sync
+      </button>
+      <div class="h-8 w-px bg-slate-800 hidden sm:block"></div>
+      <div class="flex items-center space-x-2">
+        <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-amber-400 border border-slate-600">
+          NS
+        </div>
+        <div class="hidden xl:block text-left text-xs">
+          <p class="font-semibold text-slate-200">Nipun Sukhadiya</p>
+          <p class="text-[10px] text-slate-400">Managing Director</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Bar -->
+  <nav class="bg-slate-900 border-b border-slate-800 px-4 lg:px-8 overflow-x-auto no-scrollbar">
+    <div class="flex space-x-1 py-2 min-w-max">
+      <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="nav-tab text-xs font-semibold px-4 py-2 rounded-lg text-amber-400 bg-amber-500/10 border border-amber-500/20 flex items-center gap-2 transition-all">
+        <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Executive Dashboard
+      </button>
+      <button onclick="switchTab('raw-material')" id="tab-btn-raw-material" class="nav-tab text-xs font-semibold px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 flex items-center gap-2 transition-all">
+        <i data-lucide="boxes" class="w-4 h-4"></i> Raw Materials & Silos
+      </button>
+      <button onclick="switchTab('production')" id="tab-btn-production" class="nav-tab text-xs font-semibold px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 flex items-center gap-2 transition-all">
+        <i data-lucide="flame" class="w-4 h-4"></i> Autoclave & QC Logs
+      </button>
+      <button onclick="switchTab('yard-inventory')" id="tab-btn-yard-inventory" class="nav-tab text-xs font-semibold px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 flex items-center gap-2 transition-all">
+        <i data-lucide="layers" class="w-4 h-4"></i> Yard Stock (m³)
+      </button>
+      <button onclick="switchTab('dispatch-weighbridge')" id="tab-btn-dispatch-weighbridge" class="nav-tab text-xs font-semibold px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 flex items-center gap-2 transition-all">
+        <i data-lucide="truck" class="w-4 h-4"></i> Weighbridge & E-Way Bills
+      </button>
+
+      <!-- Targeted Pain Point Tabs Highlighted -->
+      <button onclick="switchTab('tax-compliance')" id="tab-btn-tax-compliance" class="nav-tab text-xs font-semibold px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 flex items-center gap-2 transition-all relative">
+        <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i> GST & Tax Autopilot
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+      </button>
+      <button onclick="switchTab('workforce-payroll')" id="tab-btn-workforce-payroll" class="nav-tab text-xs font-semibold px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 flex items-center gap-2 transition-all relative">
+        <i data-lucide="users" class="w-4 h-4 text-purple-400"></i> Labor & Payroll Engine
+      </button>
+      <button onclick="switchTab('receivables')" id="tab-btn-receivables" class="nav-tab text-xs font-semibold px-4 py-2 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800 flex items-center gap-2 transition-all relative">
+        <i data-lucide="indian-rupee" class="w-4 h-4 text-amber-400"></i> Collections & Receivables
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Content Wrapper -->
+  <main class="flex-1 px-4 lg:px-8 py-6 max-w-[1800px] mx-auto w-full space-y-6">
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 1: EXECUTIVE PAIN-POINT DASHBOARD -->
+    <!-- ========================================================================= -->
+    <div id="view-dashboard" class="tab-view space-y-6">
+      
+      <!-- Top Banner / Autopilot Engine Hero Banner -->
+      <div class="p-5 rounded-2xl bg-gradient-to-r from-slate-900 via-amber-950/30 to-slate-900 border border-amber-500/30 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-amber-500 text-slate-950">AUTOPILOT 2.0 ACTIVE</span>
+            <span class="text-xs text-slate-400">• Plant Operations Automated Mode</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-100">Welcome, Nipun-bhai! Plant Operations Running at 94.2% Efficiency</h2>
+          <p class="text-xs text-slate-300 max-w-3xl">
+            Tax engine active: <span class="text-emerald-400 font-medium">₹1,84,200 GST ITC claimed automatically</span> from suppliers today. 
+            Overtime & piece-rate pay calculated for <span class="text-purple-300 font-medium">42 workers</span>. 
+            Automated payment reminders dispatched via WhatsApp to overdue buyers.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <button onclick="switchTab('receivables')" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs transition-all shadow-lg shadow-amber-500/20 flex items-center gap-1.5">
+            <i data-lucide="send" class="w-4 h-4"></i> Run Collection Blitz
+          </button>
+          <button onclick="switchTab('tax-compliance')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 font-semibold rounded-xl text-xs transition-all flex items-center gap-1.5">
+            <i data-lucide="file-check" class="w-4 h-4"></i> GST Compliance Status
+          </button>
+        </div>
+      </div>
+
+      <!-- Live KPI Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <!-- Revenue Card -->
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition-all shadow-md">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <span>Monthly Sales (m³)</span>
+            <i data-lucide="trending-up" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xl font-bold text-slate-100 font-mono">14,850 m³</span>
+            <span class="text-[10px] text-emerald-400 font-semibold">+8.4% MoM</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Gross Revenue: <span class="text-slate-200 font-mono">₹56.43 Lakhs</span></p>
+        </div>
+
+        <!-- Production Daily -->
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition-all shadow-md">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <span>Today's Batch Volume</span>
+            <i data-lucide="factory" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xl font-bold text-amber-400 font-mono">542 m³</span>
+            <span class="text-[10px] text-amber-400/80 font-semibold">18 Molds Cast</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Target: <span class="text-slate-200 font-mono">600 m³/day</span> (90.3%)</p>
+        </div>
+
+        <!-- Raw Material Live Cost -->
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition-all shadow-md">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <span>Avg Material Cost/m³</span>
+            <i data-lucide="calculator" class="w-4 h-4 text-sky-400"></i>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xl font-bold text-sky-400 font-mono">₹1,845</span>
+            <span class="text-[10px] text-emerald-400 font-semibold">-₹32/m³ opt</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Slurry Fly-Ash optimized recipe</p>
+        </div>
+
+        <!-- Labor & Piece-Rate Liability -->
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition-all shadow-md">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <span>Worker Payroll Liability</span>
+            <i data-lucide="users" class="w-4 h-4 text-purple-400"></i>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xl font-bold text-purple-300 font-mono">₹4,82,400</span>
+            <span class="text-[10px] text-purple-400 font-semibold">42 Staff</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Piece Rate + OT + Advances Net</p>
+        </div>
+
+        <!-- GST & Tax Liability Net -->
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition-all shadow-md">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <span>Net Payable GST</span>
+            <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xl font-bold text-emerald-400 font-mono">₹3,42,120</span>
+            <span class="text-[10px] text-sky-400 font-semibold">GSTR-3B Auto</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Output ₹8.9L - ITC Input ₹5.48L</p>
+        </div>
+
+        <!-- Pending Collections Receivables -->
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 hover:border-slate-700 transition-all shadow-md">
+          <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+            <span>Pending Receivables</span>
+            <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400"></i>
+          </div>
+          <div class="mt-2 flex items-baseline justify-between">
+            <span class="text-xl font-bold text-rose-400 font-mono">₹24,15,800</span>
+            <span class="text-[10px] text-rose-400 font-semibold">12 Overdue</span>
+          </div>
+          <p class="text-[10px] text-slate-400 mt-1">Avg Collector Days: <span class="text-slate-200">28 Days</span></p>
+        </div>
+      </div>
+
+      <!-- Autopilot Exception & Action Center Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Autopilot Live Feed & Trigger Log -->
+        <div class="lg:col-span-2 bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></div>
+              <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+                Autopilot System Action Log & Real-time Exception Handler
+              </h3>
+            </div>
+            <span class="text-xs text-slate-400 font-mono">Realtime Smart-Triggers</span>
+          </div>
+
+          <div class="space-y-3" id="autopilot-feed-container">
+            <!-- Autopilot Item 1 -->
+            <div class="p-3.5 rounded-xl bg-slate-800/50 border border-amber-500/20 flex items-start justify-between gap-3 hover:bg-slate-800 transition-all">
+              <div class="flex items-start gap-3">
+                <div class="p-2 bg-amber-500/10 text-amber-400 rounded-lg mt-0.5">
+                  <i data-lucide="container" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-slate-200">Fly Ash Silo #2 Level Below Safety Buffer (18%)</span>
+                    <span class="px-2 py-0.2 text-[9px] bg-amber-500/20 text-amber-300 rounded font-mono">SILO ALERT</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Autopilot drafted Purchase Request for 30 MT Fly Ash to supplier <strong>Ganga Thermal Ash Ltd</strong> at ₹1,150/MT base rate.</p>
+                  <p class="text-[10px] text-slate-500 font-mono mt-1">Triggered: Today at 09:14 AM • Auto-PO Ready</p>
+                </div>
+              </div>
+              <button onclick="approveAutoPO(this)" class="px-3 py-1.5 text-xs bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg transition-all whitespace-nowrap shadow">
+                Approve Auto-PO
+              </button>
+            </div>
+
+            <!-- Autopilot Item 2 -->
+            <div class="p-3.5 rounded-xl bg-slate-800/50 border border-emerald-500/20 flex items-start justify-between gap-3 hover:bg-slate-800 transition-all">
+              <div class="flex items-start gap-3">
+                <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg mt-0.5">
+                  <i data-lucide="receipt" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-slate-200">GSTR-2B Input Tax Credit Discrepancy Auto-Resolved</span>
+                    <span class="px-2 py-0.2 text-[9px] bg-emerald-500/20 text-emerald-300 rounded font-mono">TAX ENGINE</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Supplier <strong>UltraTech Cement Yard</strong> missing GSTR-1 entry for ₹48,600 ITC. Automated WhatsApp alert generated & sent to vendor accounts department.</p>
+                  <p class="text-[10px] text-slate-500 font-mono mt-1">Triggered: Today at 10:30 AM • Vendor Acknowledged</p>
+                </div>
+              </div>
+              <button onclick="switchTab('tax-compliance')" class="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium rounded-lg transition-all whitespace-nowrap">
+                Inspect GSTR-2B
+              </button>
+            </div>
+
+            <!-- Autopilot Item 3 -->
+            <div class="p-3.5 rounded-xl bg-slate-800/50 border border-rose-500/20 flex items-start justify-between gap-3 hover:bg-slate-800 transition-all">
+              <div class="flex items-start gap-3">
+                <div class="p-2 bg-rose-500/10 text-rose-400 rounded-lg mt-0.5">
+                  <i data-lucide="message-square" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-slate-200">Overdue Invoice Reminder Sent to EarthCon Builders</span>
+                    <span class="px-2 py-0.2 text-[9px] bg-rose-500/20 text-rose-300 rounded font-mono">COLLECTIONS</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Payment of ₹4,85,000 overdue by 34 Days. Automated PDF Invoice + Payment UPI Link sent to MD WhatsApp.</p>
+                  <p class="text-[10px] text-slate-500 font-mono mt-1">Triggered: Today at 11:00 AM • Read Receipt Verified</p>
+                </div>
+              </div>
+              <button onclick="switchTab('receivables')" class="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium rounded-lg transition-all whitespace-nowrap">
+                View Ledger
+              </button>
+            </div>
+
+            <!-- Autopilot Item 4 -->
+            <div class="p-3.5 rounded-xl bg-slate-800/50 border border-purple-500/20 flex items-start justify-between gap-3 hover:bg-slate-800 transition-all">
+              <div class="flex items-start gap-3">
+                <div class="p-2 bg-purple-500/10 text-purple-400 rounded-lg mt-0.5">
+                  <i data-lucide="user-check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-semibold text-slate-200">Shift B Yard Loaders Piece-Rate Bonus Calculation Complete</span>
+                    <span class="px-2 py-0.2 text-[9px] bg-purple-500/20 text-purple-300 rounded font-mono">PAYROLL</span>
+                  </div>
+                  <p class="text-xs text-slate-400 mt-1">Yard Loader Crew loaded 280 m³ today (Exceeded standard target by 40 m³). Production bonus of ₹12/m³ calculated & added to daily wage sheet.</p>
+                  <p class="text-[10px] text-slate-500 font-mono mt-1">Triggered: Today at 02:45 PM • Added to Payslips</p>
+                </div>
+              </div>
+              <button onclick="switchTab('workforce-payroll')" class="px-3 py-1.5 text-xs bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium rounded-lg transition-all whitespace-nowrap">
+                Review Payroll
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Operations Summary & Shortcuts -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4 flex flex-col justify-between">
+          <div class="space-y-4">
+            <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2 border-b border-slate-800 pb-3">
+              <i data-lucide="sliders" class="w-4 h-4 text-amber-400"></i>
+              AAC Plant Quick Metrics & Compliance Barometer
+            </h3>
+
+            <!-- Metric Breakdown -->
+            <div class="space-y-3 text-xs">
+              <div>
+                <div class="flex justify-between text-slate-400 mb-1">
+                  <span>Autoclave Steam Efficiency</span>
+                  <span class="text-emerald-400 font-mono font-semibold">96.8%</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-emerald-500 h-full rounded-full" style="width: 96.8%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-slate-400 mb-1">
+                  <span>Yard Finished Goods Stock (m³)</span>
+                  <span class="text-amber-400 font-mono font-semibold">3,850 m³ / 5,000 m³</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-amber-500 h-full rounded-full" style="width: 77%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-slate-400 mb-1">
+                  <span>GST ITC Recovery Ratio</span>
+                  <span class="text-sky-400 font-mono font-semibold">98.2%</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-sky-500 h-full rounded-full" style="width: 98.2%"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-slate-400 mb-1">
+                  <span>Daily Shift Attendance Ratio</span>
+                  <span class="text-purple-400 font-mono font-semibold">42 / 45 Workers</span>
+                </div>
+                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                  <div class="bg-purple-500 h-full rounded-full" style="width: 93.3%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Urgent Call to Action Box -->
+            <div class="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs space-y-2">
+              <div class="flex items-center gap-1.5 text-amber-400 font-semibold">
+                <i data-lucide="calendar" class="w-4 h-4"></i> GSTR-3B Filing Deadline: 20th Oct
+              </div>
+              <p class="text-slate-300 text-[11px] leading-relaxed">
+                Autopilot has pre-compiled your GSTR-3B summary. Tax liability after ITC offset is <strong>₹3,42,120</strong>. No manual CA reconciliation needed.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800 space-y-2">
+            <button onclick="switchTab('dispatch-weighbridge')" class="w-full py-2.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+              <i data-lucide="scale" class="w-4 h-4"></i> Open Weighbridge Dispatch Terminal
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 2: RAW MATERIAL INTAKE & BATCH COSTING ENGINE -->
+    <!-- ========================================================================= -->
+    <div id="view-raw-material" class="tab-view space-y-6 hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+            <i data-lucide="boxes" class="w-5 h-5 text-amber-400"></i>
+            Raw Material Silo Monitoring & Live Slurry Batch Cost Simulator
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Real-time silo level telematics and dynamic mix-design recipe costing per m³ of finished AAC Block.</p>
+        </div>
+        <button onclick="calculateBatchCost()" class="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow flex items-center gap-2">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i> Recalculate Batch Mix Cost
+        </button>
+      </div>
+
+      <!-- Silo Levels Display Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <!-- Silo 1: Fly Ash -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-300 mb-2">
+            <span>Fly Ash Silo #1</span>
+            <span class="text-amber-400 font-mono">120 MT Cap</span>
+          </div>
+          <div class="h-36 bg-slate-800/80 rounded-xl relative flex flex-col justify-end p-2 border border-slate-700/50">
+            <!-- Fluid indicator -->
+            <div class="w-full bg-gradient-to-t from-slate-600 to-slate-400 rounded-lg transition-all duration-700 relative flex items-center justify-center font-mono font-bold text-slate-950 text-xs shadow-inner" style="height: 65%;">
+              65% (78 MT)
+            </div>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>Cost: ₹1,150/MT</span>
+            <span class="text-emerald-400">Normal Level</span>
+          </div>
+        </div>
+
+        <!-- Silo 2: Quicklime -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-300 mb-2">
+            <span>Quicklime Silo</span>
+            <span class="text-amber-400 font-mono">80 MT Cap</span>
+          </div>
+          <div class="h-36 bg-slate-800/80 rounded-xl relative flex flex-col justify-end p-2 border border-slate-700/50">
+            <div class="w-full bg-gradient-to-t from-amber-600 to-amber-400 rounded-lg transition-all duration-700 relative flex items-center justify-center font-mono font-bold text-slate-950 text-xs shadow-inner" style="height: 42%;">
+              42% (33.6 MT)
+            </div>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>Cost: ₹4,800/MT</span>
+            <span class="text-amber-400">Reorder Soon</span>
+          </div>
+        </div>
+
+        <!-- Silo 3: Cement -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-300 mb-2">
+            <span>OPC 53 Cement</span>
+            <span class="text-amber-400 font-mono">100 MT Cap</span>
+          </div>
+          <div class="h-36 bg-slate-800/80 rounded-xl relative flex flex-col justify-end p-2 border border-slate-700/50">
+            <div class="w-full bg-gradient-to-t from-sky-600 to-sky-400 rounded-lg transition-all duration-700 relative flex items-center justify-center font-mono font-bold text-slate-950 text-xs shadow-inner" style="height: 82%;">
+              82% (82 MT)
+            </div>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>Cost: ₹6,200/MT</span>
+            <span class="text-emerald-400">Stock Optimal</span>
+          </div>
+        </div>
+
+        <!-- Silo 4: Gypsum -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-300 mb-2">
+            <span>Gypsum Storage</span>
+            <span class="text-amber-400 font-mono">40 MT Cap</span>
+          </div>
+          <div class="h-36 bg-slate-800/80 rounded-xl relative flex flex-col justify-end p-2 border border-slate-700/50">
+            <div class="w-full bg-gradient-to-t from-purple-600 to-purple-400 rounded-lg transition-all duration-700 relative flex items-center justify-center font-mono font-bold text-slate-950 text-xs shadow-inner" style="height: 55%;">
+              55% (22 MT)
+            </div>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>Cost: ₹2,100/MT</span>
+            <span class="text-emerald-400">Normal Level</span>
+          </div>
+        </div>
+
+        <!-- Silo 5: Aluminum Powder -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-4 relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs font-semibold text-slate-300 mb-2">
+            <span>Aluminum Paste</span>
+            <span class="text-amber-400 font-mono">5,000 Kg</span>
+          </div>
+          <div class="h-36 bg-slate-800/80 rounded-xl relative flex flex-col justify-end p-2 border border-slate-700/50">
+            <div class="w-full bg-gradient-to-t from-rose-600 to-rose-400 rounded-lg transition-all duration-700 relative flex items-center justify-center font-mono font-bold text-slate-950 text-xs shadow-inner" style="height: 30%;">
+              30% (1,500 Kg)
+            </div>
+          </div>
+          <div class="mt-3 text-[11px] text-slate-400 flex justify-between font-mono">
+            <span>Cost: ₹210/Kg</span>
+            <span class="text-rose-400">Auto PO Triggered</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Recipe & Slurry Mix Batch Cost Calculator -->
+      <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+          <div>
+            <h3 class="text-base font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-amber-400"></i>
+              Live Mix-Design Recipe Cost Simulator (Target Density: 550 - 600 kg/m³)
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Adjust raw material proportions per batch mold (1 Mold = 4.3 m³ output) to calculate dynamic material cost per m³.</p>
+          </div>
+          <div class="bg-slate-800/80 px-4 py-2 rounded-xl border border-slate-700 text-right">
+            <span class="text-[10px] text-slate-400 uppercase tracking-wider block">Calculated Cost / m³</span>
+            <span class="text-2xl font-extrabold text-emerald-400 font-mono" id="calculated-cost-m3">₹1,845.20</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+          <!-- Fly Ash Slider -->
+          <div class="space-y-2 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+            <div class="flex justify-between text-xs">
+              <label class="font-semibold text-slate-300">Fly Ash (kg/m³)</label>
+              <span class="font-mono text-amber-400 font-bold" id="val-flyash">340 kg</span>
+            </div>
+            <input type="range" id="slider-flyash" min="280" max="420" value="340" oninput="calculateBatchCost()" class="w-full accent-amber-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+              <span>Rate: ₹1.15/kg</span>
+              <span>Subtotal: <span text-emerald-400 font-bold id="sub-flyash">₹391.00</span></span>
+            </div>
+          </div>
+
+          <!-- Quicklime Slider -->
+          <div class="space-y-2 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+            <div class="flex justify-between text-xs">
+              <label class="font-semibold text-slate-300">Quicklime (kg/m³)</label>
+              <span class="font-mono text-amber-400 font-bold" id="val-lime">95 kg</span>
+            </div>
+            <input type="range" id="slider-lime" min="70" max="130" value="95" oninput="calculateBatchCost()" class="w-full accent-amber-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+              <span>Rate: ₹4.80/kg</span>
+              <span>Subtotal: <span font-bold id="sub-lime">₹456.00</span></span>
+            </div>
+          </div>
+
+          <!-- Cement Slider -->
+          <div class="space-y-2 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+            <div class="flex justify-between text-xs">
+              <label class="font-semibold text-slate-300">OPC Cement (kg/m³)</label>
+              <span class="font-mono text-amber-400 font-bold" id="val-cement">110 kg</span>
+            </div>
+            <input type="range" id="slider-cement" min="80" max="150" value="110" oninput="calculateBatchCost()" class="w-full accent-amber-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+              <span>Rate: ₹6.20/kg</span>
+              <span>Subtotal: <span font-bold id="sub-cement">₹682.00</span></span>
+            </div>
+          </div>
+
+          <!-- Gypsum Slider -->
+          <div class="space-y-2 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+            <div class="flex justify-between text-xs">
+              <label class="font-semibold text-slate-300">Gypsum (kg/m³)</label>
+              <span class="font-mono text-amber-400 font-bold" id="val-gypsum">18 kg</span>
+            </div>
+            <input type="range" id="slider-gypsum" min="10" max="30" value="18" oninput="calculateBatchCost()" class="w-full accent-amber-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+              <span>Rate: ₹2.10/kg</span>
+              <span>Subtotal: <span font-bold id="sub-gypsum">₹37.80</span></span>
+            </div>
+          </div>
+
+          <!-- Aluminum Powder Slider -->
+          <div class="space-y-2 bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+            <div class="flex justify-between text-xs">
+              <label class="font-semibold text-slate-300">Aluminum (kg/m³)</label>
+              <span class="font-mono text-amber-400 font-bold" id="val-aluminum">1.33 kg</span>
+            </div>
+            <input type="range" id="slider-aluminum" min="0.8" max="2.0" step="0.05" value="1.33" oninput="calculateBatchCost()" class="w-full accent-amber-500 cursor-pointer">
+            <div class="flex justify-between text-[10px] text-slate-500 font-mono">
+              <span>Rate: ₹210/kg</span>
+              <span>Subtotal: <span font-bold id="sub-aluminum">₹278.40</span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recipe Optimization Summary Footer -->
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700 flex flex-col md:flex-row items-center justify-between text-xs gap-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-emerald-500/10 text-emerald-400 rounded-lg">
+              <i data-lucide="check-circle2" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <p class="font-semibold text-slate-200">Optimal Mix Density Reached: 564.33 kg/m³</p>
+              <p class="text-slate-400 text-[11px]">Meets IS 2185 (Part 3) standard for Grade 1 Load-Bearing AAC Blocks.</p>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-slate-200 font-medium rounded-lg transition-all text-xs">Save Mix Preset</button>
+            <button class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-lg transition-all text-xs">Apply to Batch Mixer #1</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 3: PRODUCTION & AUTOCLAVE LIFECYCLE LOGS -->
+    <!-- ========================================================================= -->
+    <div id="view-production" class="tab-view space-y-6 hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+            <i data-lucide="flame" class="w-5 h-5 text-amber-400"></i>
+            Autoclave Steam Curing Cycles & Production Leakage Quality Control
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Live tracking of high-pressure autoclaves (12 Bar, 185°C) and scrap/rejection cost leakage logs.</p>
+        </div>
+      </div>
+
+      <!-- Active Autoclave Vessels Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Autoclave Unit 1 -->
+        <div class="bg-slate-900/90 rounded-2xl border border-emerald-500/30 p-5 space-y-4 relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></div>
+              <h3 class="font-bold text-slate-100 text-sm">Autoclave Vessel #01</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400">SOAKING STAGE</span>
+          </div>
+
+          <!-- Gauge Metrics -->
+          <div class="grid grid-cols-2 gap-3 bg-slate-800/50 p-3 rounded-xl text-center border border-slate-700/50 font-mono">
+            <div>
+              <span class="text-[10px] text-slate-400 block">STEAM PRESSURE</span>
+              <span class="text-lg font-bold text-emerald-400">12.2 Bar</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 block">CORE TEMP</span>
+              <span class="text-lg font-bold text-amber-400">186.4 °C</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs text-slate-400 font-mono">
+              <span>Soaking Progress (4.5 / 6.0 hrs)</span>
+              <span class="text-slate-200">75%</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-emerald-400 h-full rounded-full transition-all duration-500" style="width: 75%"></div>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-400 flex justify-between border-t border-slate-800 pt-3">
+            <span>Capacity: <strong>14 Molds (60.2 m³)</strong></span>
+            <span class="text-slate-300">Est End: 17:30 PM</span>
+          </div>
+        </div>
+
+        <!-- Autoclave Unit 2 -->
+        <div class="bg-slate-900/90 rounded-2xl border border-amber-500/30 p-5 space-y-4 relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-amber-400 animate-pulse"></div>
+              <h3 class="font-bold text-slate-100 text-sm">Autoclave Vessel #02</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300">VACUUM & RAMPING</span>
+          </div>
+
+          <!-- Gauge Metrics -->
+          <div class="grid grid-cols-2 gap-3 bg-slate-800/50 p-3 rounded-xl text-center border border-slate-700/50 font-mono">
+            <div>
+              <span class="text-[10px] text-slate-400 block">STEAM PRESSURE</span>
+              <span class="text-lg font-bold text-amber-400">4.8 Bar</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 block">CORE TEMP</span>
+              <span class="text-lg font-bold text-amber-400">122.0 °C</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs text-slate-400 font-mono">
+              <span>Ramping Progress (1.2 / 2.5 hrs)</span>
+              <span class="text-slate-200">48%</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-amber-400 h-full rounded-full transition-all duration-500" style="width: 48%"></div>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-400 flex justify-between border-t border-slate-800 pt-3">
+            <span>Capacity: <strong>14 Molds (60.2 m³)</strong></span>
+            <span class="text-slate-300">Est End: 21:15 PM</span>
+          </div>
+        </div>
+
+        <!-- Autoclave Unit 3 -->
+        <div class="bg-slate-900/90 rounded-2xl border border-sky-500/30 p-5 space-y-4 relative overflow-hidden">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 rounded-full bg-sky-400"></div>
+              <h3 class="font-bold text-slate-100 text-sm">Autoclave Vessel #03</h3>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-sky-500/20 text-sky-300">DEPRESSURIZING</span>
+          </div>
+
+          <!-- Gauge Metrics -->
+          <div class="grid grid-cols-2 gap-3 bg-slate-800/50 p-3 rounded-xl text-center border border-slate-700/50 font-mono">
+            <div>
+              <span class="text-[10px] text-slate-400 block">STEAM PRESSURE</span>
+              <span class="text-lg font-bold text-sky-400">1.1 Bar</span>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 block">CORE TEMP</span>
+              <span class="text-lg font-bold text-slate-300">92.0 °C</span>
+            </div>
+          </div>
+
+          <!-- Progress Bar -->
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs text-slate-400 font-mono">
+              <span>Cooling Progress (0.8 / 1.0 hrs)</span>
+              <span class="text-slate-200">80%</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+              <div class="bg-sky-400 h-full rounded-full transition-all duration-500" style="width: 80%"></div>
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-400 flex justify-between border-t border-slate-800 pt-3">
+            <span>Ready for Unloading: <strong>18 mins</strong></span>
+            <span class="text-emerald-400 font-medium">Shift C Yard Ready</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quality Control Rejection & Cost Leakage Log Table -->
+      <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400"></i>
+            Daily Quality Control Breakage & Cost Leakage Log (Scrap Tracking)
+          </h3>
+          <span class="text-xs text-rose-400 font-mono">Today Breakage Rate: 1.12% (Target &lt; 1.5%)</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-800/60 text-slate-400 uppercase font-mono border-b border-slate-700">
+                <th class="py-3 px-4">Batch ID</th>
+                <th class="py-3 px-4">Cutting Line Wire</th>
+                <th class="py-3 px-4">Defect Reason</th>
+                <th class="py-3 px-4 text-center">Rejected Volume (m³)</th>
+                <th class="py-3 px-4 text-right">Financial Leakage (₹)</th>
+                <th class="py-3 px-4 text-center">Action / Recycling</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300">
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4 font-mono text-amber-400 font-semibold">#BT-2026-0929-A1</td>
+                <td class="py-3 px-4">Line B (0.25mm High-Tensile)</td>
+                <td class="py-3 px-4 text-slate-300">Wire breakage during horizontal trim</td>
+                <td class="py-3 px-4 text-center font-mono">2.15 m³</td>
+                <td class="py-3 px-4 text-right font-mono text-rose-400">₹3,967.00</td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px]">Re-slurried in Batch 4</span>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4 font-mono text-amber-400 font-semibold">#BT-2026-0929-A3</td>
+                <td class="py-3 px-4">Autoclave Track Unloader</td>
+                <td class="py-3 px-4 text-slate-300">Corner chip-off during cake separation</td>
+                <td class="py-3 px-4 text-center font-mono">1.80 m³</td>
+                <td class="py-3 px-4 text-right font-mono text-rose-400">₹3,321.00</td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20 text-[10px]">Crushed for aggregate</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 4: VOLUMETRIC YARD STOCK & STORAGE STACKS -->
+    <!-- ========================================================================= -->
+    <div id="view-yard-inventory" class="tab-view space-y-6 hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+            <i data-lucide="layers" class="w-5 h-5 text-amber-400"></i>
+            Yard Finished Stock Management (Strictly in Cubic Meters - m³)
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Live stock stack monitoring, compressive strength test compliance (N/mm²), and dispatch readiness.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300 font-mono">
+            Total Yard Inventory: <strong class="text-amber-400">3,850.50 m³</strong>
+          </span>
+        </div>
+      </div>
+
+      <!-- Yard Grid Stack Breakdown -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Size 1: 600x200x100 mm -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-bold text-slate-100 text-sm">600 x 200 x 100 mm</h3>
+              <p class="text-[10px] text-slate-400">4-inch Partition Block</p>
+            </div>
+            <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg"><i data-lucide="box" class="w-5 h-5"></i></span>
+          </div>
+
+          <div class="space-y-2 font-mono text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Current Stock:</span>
+              <span class="text-slate-100 font-bold">1,240.00 m³</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Equivalent Blocks:</span>
+              <span class="text-amber-400">1,03,333 Pcs</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Compressive Strength:</span>
+              <span class="text-emerald-400">4.2 N/mm²</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Dry Density:</span>
+              <span class="text-sky-400">580 kg/m³</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 text-[10px] text-slate-400 flex justify-between">
+            <span>Stack Location: <strong>Bay A1 - A4</strong></span>
+            <span class="text-emerald-400">Cured & Ready</span>
+          </div>
+        </div>
+
+        <!-- Size 2: 600x200x150 mm -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-bold text-slate-100 text-sm">600 x 200 x 150 mm</h3>
+              <p class="text-[10px] text-slate-400">6-inch Wall Block</p>
+            </div>
+            <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg"><i data-lucide="box" class="w-5 h-5"></i></span>
+          </div>
+
+          <div class="space-y-2 font-mono text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Current Stock:</span>
+              <span class="text-slate-100 font-bold">1,410.50 m³</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Equivalent Blocks:</span>
+              <span class="text-amber-400">78,361 Pcs</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Compressive Strength:</span>
+              <span class="text-emerald-400">4.5 N/mm²</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Dry Density:</span>
+              <span class="text-sky-400">575 kg/m³</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 text-[10px] text-slate-400 flex justify-between">
+            <span>Stack Location: <strong>Bay B1 - B6</strong></span>
+            <span class="text-emerald-400">Cured & Ready</span>
+          </div>
+        </div>
+
+        <!-- Size 3: 600x200x200 mm -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-bold text-slate-100 text-sm">600 x 200 x 200 mm</h3>
+              <p class="text-[10px] text-slate-400">8-inch Load-Bearing Block</p>
+            </div>
+            <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg"><i data-lucide="box" class="w-5 h-5"></i></span>
+          </div>
+
+          <div class="space-y-2 font-mono text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Current Stock:</span>
+              <span class="text-slate-100 font-bold">880.00 m³</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Equivalent Blocks:</span>
+              <span class="text-amber-400">36,666 Pcs</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Compressive Strength:</span>
+              <span class="text-emerald-400">4.8 N/mm²</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Dry Density:</span>
+              <span class="text-sky-400">590 kg/m³</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 text-[10px] text-slate-400 flex justify-between">
+            <span>Stack Location: <strong>Bay C1 - C3</strong></span>
+            <span class="text-amber-400">High Demand</span>
+          </div>
+        </div>
+
+        <!-- Size 4: 600x200x230 mm -->
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-bold text-slate-100 text-sm">600 x 200 x 230 mm</h3>
+              <p class="text-[10px] text-slate-400">9-inch Custom Wall Block</p>
+            </div>
+            <span class="p-2 bg-amber-500/10 text-amber-400 rounded-lg"><i data-lucide="box" class="w-5 h-5"></i></span>
+          </div>
+
+          <div class="space-y-2 font-mono text-xs">
+            <div class="flex justify-between">
+              <span class="text-slate-400">Current Stock:</span>
+              <span class="text-slate-100 font-bold">320.00 m³</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Equivalent Blocks:</span>
+              <span class="text-amber-400">11,594 Pcs</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Compressive Strength:</span>
+              <span class="text-emerald-400">4.1 N/mm²</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Dry Density:</span>
+              <span class="text-sky-400">570 kg/m³</span>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 text-[10px] text-slate-400 flex justify-between">
+            <span>Stack Location: <strong>Bay D1</strong></span>
+            <span class="text-slate-400">Low Stock</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- MODULE 5: AUTOMATED GATE WEIGHBRIDGE & GST DISPATCH ENGINE -->
+    <!-- ========================================================================= -->
+    <div id="view-dispatch-weighbridge" class="tab-view space-y-6 hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+            <i data-lucide="truck" class="w-5 h-5 text-amber-400"></i>
+            Live Automated Gate Weighbridge Terminal & Instant GST E-Way Bill Generator
+          </h2>
+          <p class="text-xs text-slate-400 mt-1">Automatic conversion of gross & tare weight into cubic meters (m³), instantaneous tax calculation, and driver dispatch.</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Weighbridge Live Simulator Panel -->
+        <div class="lg:col-span-5 bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-5">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+              <i data-lucide="scale" class="w-4 h-4 text-amber-400"></i>
+              Live Gate Scale Sensor Telematics
+            </h3>
+            <span class="px-2 py-0.5 rounded text-[9px] bg-emerald-500/20 text-emerald-400 font-mono">SENSOR CONNECTED</span>
+          </div>
+
+          <!-- Live Digital Sensor Screen -->
+          <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-center font-mono space-y-2 shadow-inner">
+            <span class="text-[10px] text-slate-500 uppercase tracking-widest block">WEIGHBRIDGE LIVE NET PAYLOAD</span>
+            <div class="text-3xl font-extrabold text-amber-400 flex items-center justify-center gap-2">
+              <span id="live-net-weight">18,450</span> <span class="text-sm font-normal text-slate-400">KG</span>
+            </div>
+            <div class="text-xs text-emerald-400 font-semibold border-t border-slate-800/80 pt-2 flex justify-around">
+              <span>Gross: <strong id="live-gross">28,950 kg</strong></span>
+              <span>Tare: <strong id="live-tare">10,500 kg</strong></span>
+            </div>
+          </div>
+
+          <!-- Dispatch Form Parameters -->
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="text-slate-400 font-medium block mb-1">Select Buyer / Consignee</label>
+              <select id="wb-customer" onchange="recalculateDispatchInvoice()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-amber-500">
+                <option value="EarthCon Builders Surat">EarthCon Builders (GSTIN: 24AAACE1234F1Z8) - Intra-state</option>
+                <option value="Shree Ram Developers Vapi">Shree Ram Developers (GSTIN: 24ABCDS9876K1Z2) - Intra-state</option>
+                <option value="Mahavir Infra Mumbai">Mahavir Infra Mumbai (GSTIN: 27AABCM5544L1Z9) - Inter-state (IGST)</option>
+              </select>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-slate-400 font-medium block mb-1">Truck / Vehicle No.</label>
+                <input type="text" id="wb-truck" value="GJ-05-BX-9812" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 font-mono text-slate-200 focus:outline-none focus:border-amber-500">
+              </div>
+              <div>
+                <label class="text-slate-400 font-medium block mb-1">Driver Mobile No.</label>
+                <input type="text" id="wb-driver-phone" value="+91 98250 12345" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 font-mono text-slate-200 focus:outline-none focus:border-amber-500">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-slate-400 font-medium block mb-1">AAC Block Size Select</label>
+                <select id="wb-size" onchange="recalculateDispatchInvoice()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-slate-200 focus:outline-none focus:border-amber-500">
+                  <option value="600x200x150">600x200x150 mm (6 Inch)</option>
+                  <option value="600x200x100">600x200x100 mm (4 Inch)</option>
+                  <option value="600x200x200">600x200x200 mm (8 Inch)</option>
+                </select>
+              </div>
+              <div>
+                <label class="text-slate-400 font-medium block mb-1">Price / m³ (₹)</label>
+                <input type="number" id="wb-rate" value="3800" oninput="recalculateDispatchInvoice()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 font-mono text-slate-200 focus:outline-none focus:border-amber-500">
+              </div>
+            </div>
+
+            <!-- Auto Volume Calculation Box -->
+            <div class="p-3 bg-slate-800/80 rounded-xl border border-slate-700 flex justify-between items-center font-mono">
+              <span class="text-slate-400">Auto-Converted Volume (m³):</span>
+              <span class="text-lg font-bold text-amber-400" id="wb-calc-vol">32.08 m³</span>
+            </div>
+          </div>
+
+          <button onclick="generateDispatchDocument()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
+            <i data-lucide="file-text" class="w-4 h-4"></i> Generate Tax Invoice & E-Way Bill
+          </button>
+        </div>
+
+        <!-- Invoice & E-Way Bill Preview Screen -->
+        <div class="lg:col-span-7 bg-slate-900/90 rounded-2xl border border-slate-800 p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4 mb-4">
+              <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+                <i data-lucide="printer" class="w-4 h-4 text-emerald-400"></i>
+                Live GST Tax Invoice & E-Way Document Preview
+              </h3>
+              <button onclick="window.print()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1">
+                <i data-lucide="printer" class="w-3.5 h-3.5"></i> Print Document
+              </button>
+            </div>
+
+            <!-- Printable GST Document Layout -->
+            <div id="printable-invoice" class="bg-slate-950 p-6 rounded-xl border border-slate-800 font-sans space-y-4 text-xs text-slate-200">
+              <!-- Invoice Header -->
+              <div class="flex justify-between border-b border-slate-800 pb-4">
+                <div>
+                  <h2 class="text-base font-extrabold text-amber-400">SHREE SHAKTI AAC INDUSTRIES</h2>
+                  <p class="text-[11px] text-slate-400">Plot 104-108, GIDC Industrial Estate, Sachin, Surat - 394230</p>
+                  <p class="text-[11px] font-mono text-slate-400">GSTIN: 24AAAFS9988G1ZB | HSN: 68101600</p>
+                </div>
+                <div class="text-right font-mono">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">TAX INVOICE</span>
+                  <p class="text-slate-300 font-bold mt-1" id="inv-num">INV/2026-27/0482</p>
+                  <p class="text-[10px] text-slate-400" id="inv-date">Date: 29-Sep-2026</p>
+                </div>
+              </div>
+
+              <!-- Buyer & Transport Info -->
+              <div class="grid grid-cols-2 gap-4 bg-slate-900/60 p-3 rounded-lg border border-slate-800 text-[11px]">
+                <div>
+                  <span class="text-slate-500 block uppercase font-mono text-[9px]">BUYER / CONSIGNEE</span>
+                  <p class="font-bold text-slate-200" id="inv-buyer">EarthCon Builders Surat</p>
+                  <p class="text-slate-400" id="inv-buyer-gst">GSTIN: 24AAACE1234F1Z8</p>
+                  <p class="text-slate-400">Site: VIP Road Canal Junction, Surat</p>
+                </div>
+                <div class="font-mono">
+                  <span class="text-slate-500 block uppercase text-[9px]">TRANSPORT & E-WAY DETAILS</span>
+                  <p>Vehicle: <span class="text-amber-400 font-semibold" id="inv-vehicle">GJ-05-BX-9812</span></p>
+                  <p>E-Way Bill: <span class="text-emerald-400 font-semibold" id="inv-eway">2418-9042-8812</span></p>
+                  <p>Driver Contact: <span class="text-slate-300" id="inv-driver">+91 98250 12345</span></p>
+                </div>
+              </div>
+
+              <!-- Itemized Table -->
+              <table class="w-full text-left border-collapse my-3">
+                <thead>
+                  <tr class="border-b border-slate-800 text-slate-400 font-mono text-[10px] uppercase">
+                    <th class="py-2">Item Description</th>
+                    <th class="py-2 text-center">HSN Code</th>
+                    <th class="py-2 text-right">Volume (m³)</th>
+                    <th class="py-2 text-right">Rate / m³</th>
+                    <th class="py-2 text-right">Taxable Amt</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 font-mono">
+                  <tr>
+                    <td class="py-2.5 font-semibold text-slate-200" id="inv-item-name">AAC Blocks 600x200x150 mm</td>
+                    <td class="py-2.5 text-center text-slate-400">68101600</td>
+                    <td class="py-2.5 text-right font-bold text-slate-200" id="inv-vol">32.08 m³</td>
+                    <td class="py-2.5 text-right text-slate-300" id="inv-rate">₹3,800.00</td>
+                    <td class="py-2.5 text-right font-bold text-slate-100" id="inv-subtotal">₹1,21,904.00</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <!-- Tax Calculation Summary -->
+              <div class="border-t border-slate-800 pt-3 flex justify-between items-end font-mono">
+                <div class="space-y-1 text-[10px] text-slate-400">
+                  <p>• Auto-signed via Digital Portal Key</p>
+                  <p>• E-Way Bill valid for 100 KM / 24 Hours</p>
+                </div>
+                <div class="space-y-1 text-right text-xs">
+                  <div class="flex justify-between gap-8 text-slate-400">
+                    <span>Taxable Amount:</span>
+                    <span id="tax-base">₹1,21,904.00</span>
+                  </div>
+                  <div class="flex justify-between gap-8 text-slate-400">
+                    <span>CGST (9%):</span>
+                    <span id="tax-cgst">₹10,971.36</span>
+                  </div>
+                  <div class="flex justify-between gap-8 text-slate-400">
+                    <span>SGST (9%):</span>
+                    <span id="tax-sgst">₹10,971.36</span>
+                  </div>
+                  <div class="flex justify-between gap-8 text-base font-bold text-emerald-400 border-t border-slate-800 pt-1">
+                    <span>Grand Total:</span>
+                    <span id="tax-grand">₹1,43,846.72</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-800 flex justify-end gap-3">
+            <button onclick="sendInvoiceWhatsApp()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition-all flex items-center gap-2">
+              <i data-lucide="message-square" class="w-4 h-4"></i> Dispatch PDF to Driver WhatsApp
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PAIN POINT MODULE 1: TAX & GST COMPLIANCE AUTOMATION ENGINE -->
+    <!-- ========================================================================= -->
+    <div id="view-tax-compliance" class="tab-view space-y-6 hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="receipt" class="w-5 h-5 text-emerald-400"></i>
+              Tax & GST Compliance Automation Engine
+            </h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">PAIN POINT SOLVED</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Zero-touch GSTR-1, GSTR-3B auto-compilation, supplier ITC reconciliation, TCS/TDS tracking, and compliance calendar.</p>
+        </div>
+        <button onclick="runGstr2bMatch()" class="px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs rounded-xl transition-all shadow flex items-center gap-2">
+          <i data-lucide="refresh-cw" class="w-4 h-4"></i> Run Live GSTR-2B Supplier ITC Match
+        </button>
+      </div>
+
+      <!-- Tax Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Output GST Collected (Sales)</span>
+          <p class="text-xl font-bold text-slate-100 font-mono">₹8,90,280</p>
+          <p class="text-[10px] text-slate-500">18% HSN 6810 on Block Sales</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Input Tax Credit / ITC (Purchases)</span>
+          <p class="text-xl font-bold text-emerald-400 font-mono">₹5,48,160</p>
+          <p class="text-[10px] text-emerald-400/80">Cement, Fly Ash, Power & Freight</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Net Payable Tax Liability</span>
+          <p class="text-xl font-bold text-amber-400 font-mono">₹3,42,120</p>
+          <p class="text-[10px] text-slate-500">Output Minus Eligible ITC</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">TCS / Section 194Q TDS Deducted</span>
+          <p class="text-xl font-bold text-purple-300 font-mono">₹42,850</p>
+          <p class="text-[10px] text-purple-400">Auto-credited from Bulk Buyers</p>
+        </div>
+      </div>
+
+      <!-- GSTR-2B Auto-Reconciliation Log Table -->
+      <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+            Live GSTR-2B vs Supplier Invoices Matching Center (ITC Leakage Protection)
+          </h3>
+          <span class="text-xs text-emerald-400 font-mono">99.4% Matched</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-800/60 text-slate-400 uppercase font-mono border-b border-slate-700">
+                <th class="py-3 px-4">Supplier Name</th>
+                <th class="py-3 px-4">Supplier GSTIN</th>
+                <th class="py-3 px-4">Purchase Bill No</th>
+                <th class="py-3 px-4 text-right">Invoice Amount</th>
+                <th class="py-3 px-4 text-right">ITC Amount (18%)</th>
+                <th class="py-3 px-4 text-center">2B Portal Status</th>
+                <th class="py-3 px-4 text-center">Autopilot Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300">
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4 font-semibold text-slate-200">UltraTech Cement Ltd</td>
+                <td class="py-3 px-4 font-mono text-slate-400">24AAACU0001A1Z3</td>
+                <td class="py-3 px-4 font-mono">INV-UT-8921</td>
+                <td class="py-3 px-4 text-right font-mono">₹5,08,200</td>
+                <td class="py-3 px-4 text-right font-mono text-emerald-400">₹77,522</td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">MATCHED</span>
+                </td>
+                <td class="py-3 px-4 text-center text-slate-400">Eligible for Claim</td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4 font-semibold text-slate-200">Ganga Thermal Fly Ash</td>
+                <td class="py-3 px-4 font-mono text-slate-400">24ABCFG9812M1Z8</td>
+                <td class="py-3 px-4 font-mono">GTA-2026-44</td>
+                <td class="py-3 px-4 text-right font-mono">₹3,18,600</td>
+                <td class="py-3 px-4 text-right font-mono text-emerald-400">₹48,600</td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-bold">MISMATCH / DELAY</span>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="sendVendorTaxReminder('Ganga Thermal Fly Ash')" class="px-2.5 py-1 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded text-[10px]">
+                    Auto-Send Vendor Nudge
+                  </button>
+                </td>
+              </tr>
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4 font-semibold text-slate-200">DGVCL Power Discom</td>
+                <td class="py-3 px-4 font-mono text-slate-400">24AADCD1122B1Z1</td>
+                <td class="py-3 px-4 font-mono">EB-SEP26-0912</td>
+                <td class="py-3 px-4 text-right font-mono">₹4,12,000</td>
+                <td class="py-3 px-4 text-right font-mono text-emerald-400">₹62,847</td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">MATCHED</span>
+                </td>
+                <td class="py-3 px-4 text-center text-slate-400">Eligible for Claim</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Compliance Calendar & Deadlines -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-3">
+          <div class="flex items-center gap-2 text-slate-200 font-bold text-sm border-b border-slate-800 pb-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-emerald-400"></i> GSTR-1 Filing (Monthly Sales)
+          </div>
+          <p class="text-xs text-slate-400">Automated compilation of all outbound invoices issued during the month.</p>
+          <div class="flex justify-between items-center text-xs font-mono pt-2">
+            <span class="text-slate-400">Deadline: 11th Oct</span>
+            <span class="text-emerald-400 font-bold">READY TO FILE</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-3">
+          <div class="flex items-center gap-2 text-slate-200 font-bold text-sm border-b border-slate-800 pb-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i> GSTR-3B Summary Return
+          </div>
+          <p class="text-xs text-slate-400">Final tax payment return deducting verified input tax credit.</p>
+          <div class="flex justify-between items-center text-xs font-mono pt-2">
+            <span class="text-slate-400">Deadline: 20th Oct</span>
+            <span class="text-amber-400 font-bold">SUMMARY READY</span>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-3">
+          <div class="flex items-center gap-2 text-slate-200 font-bold text-sm border-b border-slate-800 pb-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-purple-400"></i> Advance Tax & E-Invoicing
+          </div>
+          <p class="text-xs text-slate-400">E-Invoicing B2B QR Code compliance active for all invoices &gt; ₹5,000.</p>
+          <div class="flex justify-between items-center text-xs font-mono pt-2">
+            <span class="text-slate-400">Status: Active</span>
+            <span class="text-purple-300 font-bold">100% COMPLIANT</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PAIN POINT MODULE 2: WORKFORCE PAYROLL & PLANT SHIFT ATTENDANCE ENGINE -->
+    <!-- ========================================================================= -->
+    <div id="view-workforce-payroll" class="tab-view space-y-6 hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="users" class="w-5 h-5 text-purple-400"></i>
+              Factory Workforce Payroll & Piece-Rate Shift Attendance Engine
+            </h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">PAIN POINT SOLVED</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Solves worker tracking, daily piece-rate loading incentives (per m³), overtime calculation, and advance deductions.</p>
+        </div>
+        <button onclick="generateBankPayoutSheet()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl transition-all shadow flex items-center gap-2">
+          <i data-lucide="download" class="w-4 h-4"></i> Export Bank Payout Sheet (CSV)
+        </button>
+      </div>
+
+      <!-- Payroll Stats Row -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Active Workforce</span>
+          <p class="text-xl font-bold text-slate-100 font-mono">42 Workers Present</p>
+          <p class="text-[10px] text-slate-500">3 Shift Crews Active</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Monthly Basic & Piece-Rate Pay</span>
+          <p class="text-xl font-bold text-purple-300 font-mono">₹4,12,000</p>
+          <p class="text-[10px] text-slate-500">Includes Volume Bonuses</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Total Overtime Pay</span>
+          <p class="text-xl font-bold text-amber-400 font-mono">₹48,200</p>
+          <p class="text-[10px] text-amber-400/80">320 Hours Extra Logged</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Advance / Loan Recovery</span>
+          <p class="text-xl font-bold text-emerald-400 font-mono">-₹22,200</p>
+          <p class="text-[10px] text-emerald-400">Auto-deducted from Wages</p>
+        </div>
+      </div>
+
+      <!-- Factory Workers Roster & Live Wage Table -->
+      <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+            <i data-lucide="user-check" class="w-4 h-4 text-purple-400"></i>
+            Live Shift Attendance & Daily Piece-Rate Incentive Register
+          </h3>
+          <span class="text-xs text-purple-300 font-mono">Shift A & Shift B Synchronized</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-800/60 text-slate-400 uppercase font-mono border-b border-slate-700">
+                <th class="py-3 px-4">Worker ID & Name</th>
+                <th class="py-3 px-4">Role / Category</th>
+                <th class="py-3 px-4 text-center">Attendance</th>
+                <th class="py-3 px-4 text-right">Base Wage / Day</th>
+                <th class="py-3 px-4 text-right">Piece-Rate Vol (m³)</th>
+                <th class="py-3 px-4 text-right">Overtime (Hrs)</th>
+                <th class="py-3 px-4 text-right">Loan Deduct</th>
+                <th class="py-3 px-4 text-right">Net Payable (₹)</th>
+                <th class="py-3 px-4 text-center">Payslip</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300">
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4">
+                  <p class="font-semibold text-slate-200">Ramesh Bhai Patel</p>
+                  <p class="text-[10px] text-slate-500 font-mono">#WRK-102</p>
+                </td>
+                <td class="py-3 px-4 text-slate-300">Autoclave Operator</td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">PRESENT</span>
+                </td>
+                <td class="py-3 px-4 text-right font-mono">₹650.00</td>
+                <td class="py-3 px-4 text-right font-mono text-amber-400">180 m³</td>
+                <td class="py-3 px-4 text-right font-mono">2.5 hrs</td>
+                <td class="py-3 px-4 text-right font-mono text-emerald-400">-₹100.00</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-slate-100">₹820.00</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="viewPayslip('Ramesh Bhai Patel')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 text-[10px]">View</button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4">
+                  <p class="font-semibold text-slate-200">Suresh Kumar Yadav</p>
+                  <p class="text-[10px] text-slate-500 font-mono">#WRK-108</p>
+                </td>
+                <td class="py-3 px-4 text-slate-300">Yard Loader Crew Lead</td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">PRESENT</span>
+                </td>
+                <td class="py-3 px-4 text-right font-mono">₹550.00</td>
+                <td class="py-3 px-4 text-right font-mono text-amber-400">240 m³ (@₹2/m³)</td>
+                <td class="py-3 px-4 text-right font-mono">3.0 hrs</td>
+                <td class="py-3 px-4 text-right font-mono text-emerald-400">-₹200.00</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-slate-100">₹1,010.00</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="viewPayslip('Suresh Kumar Yadav')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 text-[10px]">View</button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4">
+                  <p class="font-semibold text-slate-200">Babubhai Solanki</p>
+                  <p class="text-[10px] text-slate-500 font-mono">#WRK-114</p>
+                </td>
+                <td class="py-3 px-4 text-slate-300">Cutting Wire Maintenance</td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold text-[10px]">PRESENT</span>
+                </td>
+                <td class="py-3 px-4 text-right font-mono">₹600.00</td>
+                <td class="py-3 px-4 text-right font-mono text-amber-400">--</td>
+                <td class="py-3 px-4 text-right font-mono">1.0 hr</td>
+                <td class="py-3 px-4 text-right font-mono text-emerald-400">-₹0.00</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-slate-100">₹675.00</td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="viewPayslip('Babubhai Solanki')" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded border border-slate-700 text-[10px]">View</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================================= -->
+    <!-- PAIN POINT MODULE 3: ACCOUNTS RECEIVABLE & AUTOMATED COLLECTIONS -->
+    <!-- ========================================================================= -->
+    <div id="view-receivables" class="tab-view space-y-6 hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-xl font-bold text-slate-100 flex items-center gap-2">
+              <i data-lucide="indian-rupee" class="w-5 h-5 text-amber-400"></i>
+              Accounts Receivable & One-Click WhatsApp Collections Engine
+            </h2>
+            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">PAIN POINT SOLVED</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">Eliminates payment chasing headaches with automated aging analysis, scheduled WhatsApp reminders, and bank payment reconciliation.</p>
+        </div>
+        <button onclick="triggerAllWhatsAppReminders()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition-all shadow flex items-center gap-2">
+          <i data-lucide="send" class="w-4 h-4"></i> Send Broadcast WhatsApp Reminders
+        </button>
+      </div>
+
+      <!-- Payment Aging Breakdown Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Current (0 - 30 Days)</span>
+          <p class="text-xl font-bold text-emerald-400 font-mono">₹14,20,000</p>
+          <p class="text-[10px] text-emerald-400">Within Credit Terms</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Overdue (31 - 60 Days)</span>
+          <p class="text-xl font-bold text-amber-400 font-mono">₹6,15,800</p>
+          <p class="text-[10px] text-amber-400">Nudge Sent Automatically</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Critical Overdue (60+ Days)</span>
+          <p class="text-xl font-bold text-rose-400 font-mono">₹3,80,000</p>
+          <p class="text-[10px] text-rose-400">Dispatch Hold Warning Triggered</p>
+        </div>
+
+        <div class="bg-slate-900/90 p-4 rounded-xl border border-slate-800 space-y-1">
+          <span class="text-xs text-slate-400">Total Outstanding Balance</span>
+          <p class="text-xl font-bold text-slate-100 font-mono">₹24,15,800</p>
+          <p class="text-[10px] text-slate-500">Across 14 Active Buyers</p>
+        </div>
+      </div>
+
+      <!-- Receivables Outstanding Ledger Table -->
+      <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <h3 class="font-bold text-sm text-slate-100 flex items-center gap-2">
+            <i data-lucide="file-spreadsheet" class="w-4 h-4 text-amber-400"></i>
+            Buyer Outstanding Ledger & Automated Follow-Up Control
+          </h3>
+          <span class="text-xs text-slate-400 font-mono">Auto-Reconciled with HDFC Bank API</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-slate-800/60 text-slate-400 uppercase font-mono border-b border-slate-700">
+                <th class="py-3 px-4">Buyer Company Name</th>
+                <th class="py-3 px-4">Contact Person</th>
+                <th class="py-3 px-4 text-right">Total Outstanding (₹)</th>
+                <th class="py-3 px-4 text-center">Overdue Days</th>
+                <th class="py-3 px-4 text-center">Dispatch Status</th>
+                <th class="py-3 px-4 text-center">One-Click Action</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800 text-slate-300">
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4">
+                  <p class="font-semibold text-slate-200">EarthCon Builders Surat</p>
+                  <p class="text-[10px] text-slate-500 font-mono">GST: 24AAACE1234F1Z8</p>
+                </td>
+                <td class="py-3 px-4 text-slate-300">Mr. Tushar Shah (+91 98980 11223)</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-rose-400">₹4,85,000</td>
+                <td class="py-3 px-4 text-center font-mono">
+                  <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px]">34 DAYS OVERDUE</span>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 text-[10px]">DISPATCH WARNING</span>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="sendSingleWhatsAppReminder('EarthCon Builders Surat', '₹4,85,000')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold text-[10px] flex items-center gap-1 mx-auto shadow">
+                    <i data-lucide="message-square" class="w-3 h-3"></i> WhatsApp Invoice
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4">
+                  <p class="font-semibold text-slate-200">Shree Ram Developers Vapi</p>
+                  <p class="text-[10px] text-slate-500 font-mono">GST: 24ABCDS9876K1Z2</p>
+                </td>
+                <td class="py-3 px-4 text-slate-300">Mr. Sanjay Patel (+91 94261 44556)</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-amber-400">₹3,20,000</td>
+                <td class="py-3 px-4 text-center font-mono">
+                  <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold text-[10px]">18 DAYS (DUE)</span>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px]">CLEAR FOR DISPATCH</span>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="sendSingleWhatsAppReminder('Shree Ram Developers Vapi', '₹3,20,000')" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-bold text-[10px] flex items-center gap-1 mx-auto shadow">
+                    <i data-lucide="message-square" class="w-3 h-3"></i> Send Nudge
+                  </button>
+                </td>
+              </tr>
+
+              <tr class="hover:bg-slate-800/40">
+                <td class="py-3 px-4">
+                  <p class="font-semibold text-slate-200">Mahavir Infra Mumbai</p>
+                  <p class="text-[10px] text-slate-500 font-mono">GST: 27AABCM5544L1Z9</p>
+                </td>
+                <td class="py-3 px-4 text-slate-300">Mr. Rajesh Mehta (+91 98200 99887)</td>
+                <td class="py-3 px-4 text-right font-mono font-bold text-rose-500">₹3,80,000</td>
+                <td class="py-3 px-4 text-center font-mono">
+                  <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold text-[10px]">62 DAYS OVERDUE</span>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 border border-rose-500/30 text-[10px] font-bold">AUTO DISPATCH HOLD</span>
+                </td>
+                <td class="py-3 px-4 text-center">
+                  <button onclick="sendSingleWhatsAppReminder('Mahavir Infra Mumbai', '₹3,80,000')" class="px-3 py-1 bg-rose-600 hover:bg-rose-500 text-white rounded font-bold text-[10px] flex items-center gap-1 mx-auto shadow">
+                    <i data-lucide="alert-octagon" class="w-3 h-3"></i> Final Demand
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <script>
+    // Initialize Lucide Icons on DOM load
+    document.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      calculateBatchCost();
+      recalculateDispatchInvoice();
+    });
+
+    // Tab Switcher Logic
+    function switchTab(tabId) {
+      // Hide all tab views
+      document.querySelectorAll('.tab-view').forEach(view => {
+        view.classList.add('hidden');
+      });
+
+      // Show selected tab view
+      const targetView = document.getElementById(`view-${tabId}`);
+      if (targetView) {
+        targetView.classList.remove('hidden');
+      }
+
+      // Reset active tab button styles
+      document.querySelectorAll('.nav-tab').forEach(btn => {
+        btn.classList.remove('text-amber-400', 'bg-amber-500/10', 'border', 'border-amber-500/20');
+        btn.classList.add('text-slate-400');
+      });
+
+      // Highlight active tab button
+      const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400');
+        activeBtn.classList.add('text-amber-400', 'bg-amber-500/10', 'border', 'border-amber-500/20');
+      }
+    }
+
+    // Dynamic Mix Recipe Cost Calculator
+    function calculateBatchCost() {
+      const flyash = parseFloat(document.getElementById('slider-flyash').value);
+      const lime = parseFloat(document.getElementById('slider-lime').value);
+      const cement = parseFloat(document.getElementById('slider-cement').value);
+      const gypsum = parseFloat(document.getElementById('slider-gypsum').value);
+      const aluminum = parseFloat(document.getElementById('slider-aluminum').value);
+
+      // Update Slider Label Text
+      document.getElementById('val-flyash').innerText = `${flyash} kg`;
+      document.getElementById('val-lime').innerText = `${lime} kg`;
+      document.getElementById('val-cement').innerText = `${cement} kg`;
+      document.getElementById('val-gypsum').innerText = `${gypsum} kg`;
+      document.getElementById('val-aluminum').innerText = `${aluminum.toFixed(2)} kg`;
+
+      // Material Unit Costs
+      const costFlyash = flyash * 1.15;
+      const costLime = lime * 4.80;
+      const costCement = cement * 6.20;
+      const costGypsum = gypsum * 2.10;
+      const costAluminum = aluminum * 210.00;
+
+      // Subtotal Updates
+      document.getElementById('sub-flyash').innerText = `₹${costFlyash.toFixed(2)}`;
+      document.getElementById('sub-lime').innerText = `₹${costLime.toFixed(2)}`;
+      document.getElementById('sub-cement').innerText = `₹${costCement.toFixed(2)}`;
+      document.getElementById('sub-gypsum').innerText = `₹${costGypsum.toFixed(2)}`;
+      document.getElementById('sub-aluminum').innerText = `₹${costAluminum.toFixed(2)}`;
+
+      // Total Cost per m³
+      const totalCostPerM3 = costFlyash + costLime + costCement + costGypsum + costAluminum;
+      document.getElementById('calculated-cost-m3').innerText = `₹${totalCostPerM3.toFixed(2)}`;
+    }
+
+    // Weighbridge Live Dispatch Invoice Calculator
+    function recalculateDispatchInvoice() {
+      const customer = document.getElementById('wb-customer').value;
+      const size = document.getElementById('wb-size').value;
+      const rate = parseFloat(document.getElementById('wb-rate').value) || 3800;
+      const truck = document.getElementById('wb-truck').value;
+      const driverPhone = document.getElementById('wb-driver-phone').value;
+
+      // Net weight 18,450 kg -> AAC Block Density approx 575 kg/m³
+      const netWeight = 18450;
+      const volumeM3 = netWeight / 575; // Approx 32.08 m³
+
+      document.getElementById('wb-calc-vol').innerText = `${volumeM3.toFixed(2)} m³`;
+
+      // Update Invoice Display Preview
+      document.getElementById('inv-buyer').innerText = customer;
+      document.getElementById('inv-vehicle').innerText = truck;
+      document.getElementById('inv-driver').innerText = driverPhone;
+      document.getElementById('inv-item-name').innerText = `AAC Blocks ${size} mm`;
+      document.getElementById('inv-vol').innerText = `${volumeM3.toFixed(2)} m³`;
+      document.getElementById('inv-rate').innerText = `₹${rate.toFixed(2)}`;
+
+      const taxableAmount = volumeM3 * rate;
+      const isInterState = customer.includes('Mumbai');
+
+      let cgst = 0, sgst = 0, igst = 0;
+
+      if (isInterState) {
+        igst = taxableAmount * 0.18;
+        document.getElementById('tax-cgst').innerText = '₹0.00 (IGST 18%)';
+        document.getElementById('tax-sgst').innerText = `₹${igst.toFixed(2)}`;
+      } else {
+        cgst = taxableAmount * 0.09;
+        sgst = taxableAmount * 0.09;
+        document.getElementById('tax-cgst').innerText = `₹${cgst.toFixed(2)}`;
+        document.getElementById('tax-sgst').innerText = `₹${sgst.toFixed(2)}`;
+      }
+
+      const grandTotal = taxableAmount + cgst + sgst + igst;
+
+      document.getElementById('tax-base').innerText = `₹${taxableAmount.toFixed(2)}`;
+      document.getElementById('subtotal-preview') ? document.getElementById('subtotal-preview').innerText = `₹${taxableAmount.toFixed(2)}` : null;
+      document.getElementById('inv-subtotal').innerText = `₹${taxableAmount.toFixed(2)}`;
+      document.getElementById('tax-grand').innerText = `₹${grandTotal.toFixed(2)}`;
+    }
+
+    // Action Helpers & Toast Alerts
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `p-4 rounded-xl text-xs font-semibold shadow-2xl flex items-center gap-2 border transition-all duration-300 pointer-events-auto ${
+        type === 'success' ? 'bg-slate-900 border-emerald-500/50 text-emerald-400' : 'bg-slate-900 border-amber-500/50 text-amber-400'
+      }`;
+      toast.innerHTML = `<i data-lucide="check-circle-2" class="w-4 h-4"></i> ${message}`;
+      container.appendChild(toast);
+      lucide.createIcons();
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    function triggerGlobalAutopilotSync() {
+      showToast('Autopilot Sync Complete: GST ITC, Live Silos & Receivables Updated.');
+    }
+
+    function approveAutoPO(button) {
+      button.innerText = 'PO Issued!';
+      button.disabled = true;
+      button.className = 'px-3 py-1.5 text-xs bg-emerald-500 text-slate-950 font-bold rounded-lg whitespace-nowrap opacity-80';
+      showToast('Automated Purchase Order #PO-8812 sent to Ganga Thermal Ash Ltd.');
+    }
+
+    function generateDispatchDocument() {
+      recalculateDispatchInvoice();
+      showToast('GST Tax Invoice & E-Way Bill #2418-9042 Generated Successfully!');
+    }
+
+    function sendInvoiceWhatsApp() {
+      showToast('Tax Invoice PDF & Gate Pass link dispatched to Driver WhatsApp.');
+    }
+
+    function sendVendorTaxReminder(vendorName) {
+      showToast(`Automated GST ITC filing reminder sent to ${vendorName} Accounts Dept.`);
+    }
+
+    function sendSingleWhatsAppReminder(customer, amount) {
+      showToast(`WhatsApp Payment Reminder + UPI Link sent to ${customer} for ${amount}`);
+    }
+
+    function triggerAllWhatsAppReminders() {
+      showToast('Broadcast Payment Nudges sent to all 12 Overdue Buyers via WhatsApp API.');
+    }
+
+    function runGstr2bMatch() {
+      showToast('GSTR-2B API Sync Complete: ₹5,48,160 Verified Input Tax Credit matched.');
+    }
+
+    function generateBankPayoutSheet() {
+      showToast('Shift Worker Payroll CSV Generated for Direct HDFC Corporate NetBanking Upload.');
+    }
+
+    function viewPayslip(workerName) {
+      showToast(`Generating itemized payslip preview for ${workerName}...`);
+    }
+  </script>
+</body>
+</html>
